@@ -16,7 +16,7 @@
     <div class="max-w-7xl mx-auto w-full flex-1 flex flex-col">
         <header class="mb-8 border-b border-slate-200 pb-6">
             <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Kinematic Econometrics: Derived Metric Analysis</h1>
-            <p class="text-lg text-slate-600 mt-2">High-Resolution Year-by-Year Pressure on T-6: The Base (1776 - 2026)</p>
+            <p class="text-lg text-slate-600 mt-2">High-Resolution Year-by-Year Pressure: The Siphoned & The Squeezed (T-6 to T-3)</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-1">
@@ -29,21 +29,34 @@
                     </p>
                     <div class="bg-slate-900 text-green-400 p-4 rounded-lg font-mono text-sm shadow-inner">
                         <p class="mb-2 text-slate-300">// P = F / A</p>
-                        <p>P_T6 = Pop% / Wealth%</p>
-                        <p class="mt-2 text-white">Pop% = 20 (Fixed)</p>
+                        <p>P_Band = Pop% / Wealth%</p>
+                        <p class="mt-2 text-white">Pop% = Fixed Band Demo %</p>
                         <p class="text-white">Wealth% = [y2 - y1]</p>
                     </div>
                 </div>
 
-                <div class="bg-green-50 p-5 rounded-xl border border-green-200 shadow-sm">
-                    <h3 class="text-sm font-bold text-green-900 uppercase tracking-wider border-b border-green-200 pb-2 mb-3">T-6: The Base</h3>
-                    <ul class="text-sm space-y-2 text-green-800">
-                        <li><strong>Color Code:</strong> Dark Green (#1b5e20)</li>
-                        <li><strong>Population:</strong> Bottom 20%</li>
-                        <li><strong>Derivation:</strong> 15% of the total bottom 50% mass.</li>
+                <div class="bg-slate-100 p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2 mb-3">The Measured Bands</h3>
+                    <ul class="text-sm space-y-3">
+                        <li class="flex items-center justify-between text-blue-500">
+                            <strong>T-3: Upper Middle (15%)</strong>
+                            <span class="inline-block w-3 h-3 bg-[#42a5f5] rounded-full shadow-sm"></span>
+                        </li>
+                        <li class="flex items-center justify-between text-blue-900">
+                            <strong>T-4: Squeezed Middle (30%)</strong>
+                            <span class="inline-block w-3 h-3 bg-[#0d47a1] rounded-full shadow-sm"></span>
+                        </li>
+                        <li class="flex items-center justify-between text-green-600">
+                            <strong>T-5: Working Class (30%)</strong>
+                            <span class="inline-block w-3 h-3 bg-[#66bb6a] rounded-full shadow-sm"></span>
+                        </li>
+                        <li class="flex items-center justify-between text-green-900">
+                            <strong>T-6: The Base (20%)</strong>
+                            <span class="inline-block w-3 h-3 bg-[#1b5e20] rounded-full shadow-sm"></span>
+                        </li>
                     </ul>
-                    <p class="text-xs text-green-700 mt-4 italic">
-                        Spikes in the graph indicate periods where the base population was starved of assets, radically driving up Kinematic Pressure.
+                    <p class="text-xs text-slate-600 mt-4 italic">
+                        The Apex (T-0 and T-1) and their direct buffers (T-2) operate on entirely different kinematic rules and are omitted here.
                     </p>
                 </div>
             </aside>
@@ -112,31 +125,79 @@
         // Modern Extraction & Offshore Hoarding
         interpolateSection(2010, 2026, [2.5, 34.0, 28.0, 21.0], [2.0, 27.0, 31.0, 25.0]);
 
-        // 1. Calculate Wealth Area (A) for T-6
+        // 1. Calculate Wealth Area (A) for T-6 to T-3
         const t6_wealth = total_green.map(v => v * 0.15); // T-6: 15% of the bottom bracket mass
+        const t5_wealth = total_green.map(v => v * 0.85); // T-5: 85% of the bottom bracket mass
+        const t4_wealth = total_blue.map(v => v * 0.35);  // T-4: 35% of the middle bracket mass
+        const t3_wealth = total_blue.map(v => v * 0.65);  // T-3: 65% of the middle bracket mass
 
-        // 2. Calculate Pressure (P) using constant Population Fraction (F = 20%)
+        // 2. Calculate Pressure (P) using constant Population Fraction (F)
         const t6_pressure = t6_wealth.map(wealth => 20.0 / wealth);
+        const t5_pressure = t5_wealth.map(wealth => 30.0 / wealth);
+        const t4_pressure = t4_wealth.map(wealth => 30.0 / wealth);
+        const t3_pressure = t3_wealth.map(wealth => 15.0 / wealth);
 
         const ctx = document.getElementById('pressureChart').getContext('2d');
         const pressureChart = new Chart(ctx, {
-            type: 'line', // Base line chart to connect the scatter points
+            type: 'line', 
             data: {
                 labels: years,
                 datasets: [
                     {
-                        label: 'Kinematic Pressure (P) on T-6',
+                        label: 'Pressure on T-3: Upper Middle',
+                        data: t3_pressure,
+                        backgroundColor: '#42a5f5', 
+                        borderColor: 'rgba(66, 165, 245, 0.2)', 
+                        pointBackgroundColor: '#42a5f5',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 1,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Pressure on T-4: Squeezed Middle',
+                        data: t4_pressure,
+                        backgroundColor: '#0d47a1', 
+                        borderColor: 'rgba(13, 71, 161, 0.2)', 
+                        pointBackgroundColor: '#0d47a1',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 1,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Pressure on T-5: Working Class',
+                        data: t5_pressure,
+                        backgroundColor: '#66bb6a', 
+                        borderColor: 'rgba(102, 187, 106, 0.2)', 
+                        pointBackgroundColor: '#66bb6a',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 1,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Pressure on T-6: The Base',
                         data: t6_pressure,
-                        backgroundColor: '#1b5e20', // T-6 Dark Green
-                        borderColor: 'rgba(27, 94, 32, 0.2)', // Lightened line for temporal connection
+                        backgroundColor: '#1b5e20', 
+                        borderColor: 'rgba(27, 94, 32, 0.2)', 
                         pointBackgroundColor: '#1b5e20',
                         pointBorderColor: '#ffffff',
                         pointBorderWidth: 1,
-                        pointRadius: 4, // Making it look like a scatterplot
+                        pointRadius: 4, 
                         pointHoverRadius: 6,
                         borderWidth: 2,
                         fill: false,
-                        tension: 0.1 // Slight curve to show flow between nodes
+                        tension: 0.1 
                     }
                 ]
             },
@@ -194,12 +255,20 @@
                             },
                             label: function(context) {
                                 const yearIndex = context.dataIndex;
-                                const w = t6_wealth[yearIndex].toFixed(2);
+                                const dsIndex = context.datasetIndex;
+                                let w, pop;
+                                
+                                if (dsIndex === 0) { w = t3_wealth[yearIndex]; pop = 15; }
+                                else if (dsIndex === 1) { w = t4_wealth[yearIndex]; pop = 30; }
+                                else if (dsIndex === 2) { w = t5_wealth[yearIndex]; pop = 30; }
+                                else { w = t6_wealth[yearIndex]; pop = 20; }
+
                                 const p = context.parsed.y.toFixed(2);
                                 return [
+                                    `${context.dataset.label}`,
                                     `Pressure (P): ${p}`,
-                                    `Wealth Share (A): ${w}%`,
-                                    `Population (F): 20%`
+                                    `Wealth Share (A): ${w.toFixed(2)}%`,
+                                    `Population (F): ${pop}%`
                                 ];
                             }
                         }
