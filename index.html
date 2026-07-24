@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinematic Econometrics: T-6 Pressure Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 p-6 min-h-screen flex flex-col">
+
+    <div class="max-w-7xl mx-auto w-full flex-1 flex flex-col">
+        <header class="mb-8 border-b border-slate-200 pb-6">
+            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Kinematic Econometrics: Derived Metric Analysis</h1>
+            <p class="text-lg text-slate-600 mt-2">High-Resolution Year-by-Year Pressure on T-6: The Base (1776 - 2026)</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-1">
+            
+            <aside class="lg:col-span-1 space-y-6">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-2 mb-3">The Kinematic Formula</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Instead of looking at gross wealth, we measure the structural "squeeze" on a demographic band by dividing its population footprint by its actual wealth share.
+                    </p>
+                    <div class="bg-slate-900 text-green-400 p-4 rounded-lg font-mono text-sm shadow-inner">
+                        <p class="mb-2 text-slate-300">// P = F / A</p>
+                        <p>P_T6 = Pop% / Wealth%</p>
+                        <p class="mt-2 text-white">Pop% = 20 (Fixed)</p>
+                        <p class="text-white">Wealth% = [y2 - y1]</p>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 p-5 rounded-xl border border-green-200 shadow-sm">
+                    <h3 class="text-sm font-bold text-green-900 uppercase tracking-wider border-b border-green-200 pb-2 mb-3">T-6: The Base</h3>
+                    <ul class="text-sm space-y-2 text-green-800">
+                        <li><strong>Color Code:</strong> Dark Green (#1b5e20)</li>
+                        <li><strong>Population:</strong> Bottom 20%</li>
+                        <li><strong>Derivation:</strong> 15% of the total bottom 50% mass.</li>
+                    </ul>
+                    <p class="text-xs text-green-700 mt-4 italic">
+                        Spikes in the graph indicate periods where the base population was starved of assets, radically driving up Kinematic Pressure.
+                    </p>
+                </div>
+            </aside>
+
+            <main class="lg:col-span-3 flex flex-col">
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200 flex-1 relative min-h-[600px]">
+                    <div class="absolute inset-0 p-6">
+                        <canvas id="pressureChart"></canvas>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <script>
+        // Generate continuous timeline from 1776 to 2026 (Delta x = 1 year)
+        const years = [];
+        for (let i = 1776; i <= 2026; i++) {
+            years.push(i);
+        }
+
+        // Initialize empty arrays to hold continuous data
+        const total_green = new Array(years.length).fill(0);
+        const total_blue = new Array(years.length).fill(0);
+        const t2_data = new Array(years.length).fill(0);
+        const t1_data = new Array(years.length).fill(0);
+
+        // Helper function to interpolate values linearly between two known points
+        function interpolateSection(startYear, endYear, startValArray, endValArray) {
+            const startIndex = years.indexOf(startYear);
+            const endIndex = years.indexOf(endYear);
+            const steps = endIndex - startIndex;
+            
+            for (let i = 0; i <= steps; i++) {
+                const ratio = i / steps;
+                total_green[startIndex + i] = startValArray[0] + (endValArray[0] - startValArray[0]) * ratio;
+                total_blue[startIndex + i]  = startValArray[1] + (endValArray[1] - startValArray[1]) * ratio;
+                t2_data[startIndex + i]     = startValArray[2] + (endValArray[2] - startValArray[2]) * ratio;
+                t1_data[startIndex + i]     = startValArray[3] + (endValArray[3] - startValArray[3]) * ratio;
+            }
+        }
+
+        // Data Structure: [Total Green (Bottom 50%), Total Blue (Middle 45%), T-2 (Next 4%), T-1 (Next 0.9%)]
+        
+        // The Founding & Agrarian Era
+        interpolateSection(1776, 1850, [10.0, 45.0, 20.0, 15.0], [4.0, 28.0, 26.0, 28.0]);
+        // Pre-Civil War Build Up
+        interpolateSection(1850, 1860, [4.0, 28.0, 26.0, 28.0], [3.5, 26.0, 27.0, 30.0]);
+        // THE RED RIDER (1861-1865)
+        interpolateSection(1860, 1865, [3.5, 26.0, 27.0, 30.0], [1.0, 15.0, 20.0, 45.0]); 
+        // Reconstruction & The Gilded Age
+        interpolateSection(1865, 1900, [1.0, 15.0, 20.0, 45.0], [3.0, 22.0, 25.0, 34.0]);
+        // The Roaring Twenties Build Up
+        interpolateSection(1900, 1928, [3.0, 22.0, 25.0, 34.0], [2.0, 18.0, 28.0, 36.0]);
+        // The 1929 Crash
+        interpolateSection(1928, 1932, [2.0, 18.0, 28.0, 36.0], [1.0, 12.0, 32.0, 38.0]);
+        // The New Deal & WWII
+        interpolateSection(1932, 1950, [1.0, 12.0, 32.0, 38.0], [3.0, 40.0, 24.0, 22.0]);
+        // The Great Compression
+        interpolateSection(1950, 1970, [3.0, 40.0, 24.0, 22.0], [4.0, 48.0, 24.0, 15.0]);
+        // Neoliberalism & Financialization begins
+        interpolateSection(1970, 1990, [4.0, 48.0, 24.0, 15.0], [3.0, 40.0, 26.0, 18.0]);
+        // The Dot Com Bubble & 2008 Lead Up
+        interpolateSection(1990, 2010, [3.0, 40.0, 26.0, 18.0], [2.5, 34.0, 28.0, 21.0]);
+        // Modern Extraction & Offshore Hoarding
+        interpolateSection(2010, 2026, [2.5, 34.0, 28.0, 21.0], [2.0, 27.0, 31.0, 25.0]);
+
+        // 1. Calculate Wealth Area (A) for T-6
+        const t6_wealth = total_green.map(v => v * 0.15); // T-6: 15% of the bottom bracket mass
+
+        // 2. Calculate Pressure (P) using constant Population Fraction (F = 20%)
+        const t6_pressure = t6_wealth.map(wealth => 20.0 / wealth);
+
+        const ctx = document.getElementById('pressureChart').getContext('2d');
+        const pressureChart = new Chart(ctx, {
+            type: 'line', // Base line chart to connect the scatter points
+            data: {
+                labels: years,
+                datasets: [
+                    {
+                        label: 'Kinematic Pressure (P) on T-6',
+                        data: t6_pressure,
+                        backgroundColor: '#1b5e20', // T-6 Dark Green
+                        borderColor: 'rgba(27, 94, 32, 0.2)', // Lightened line for temporal connection
+                        pointBackgroundColor: '#1b5e20',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 1,
+                        pointRadius: 4, // Making it look like a scatterplot
+                        pointHoverRadius: 6,
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.1 // Slight curve to show flow between nodes
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'nearest',
+                    intersect: true,
+                },
+                scales: {
+                    x: {
+                        grid: { display: false, drawBorder: true, borderColor: '#cbd5e1' },
+                        title: {
+                            display: true,
+                            text: 'Year',
+                            font: { size: 14, weight: 'bold', family: 'Inter' }
+                        },
+                        ticks: {
+                            maxRotation: 45,
+                            font: { family: 'Inter' },
+                            callback: function(val, index) {
+                                const year = this.getLabelForValue(val);
+                                // Show decades mostly for clean layout
+                                return year % 10 === 0 ? year : null;
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Kinematic Pressure (Pop % / Wealth %)',
+                            font: { size: 14, weight: 'bold', family: 'Inter' }
+                        },
+                        grid: { color: '#f1f5f9' },
+                        ticks: {
+                            font: { family: 'Inter' }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { font: { size: 14, family: 'Inter' }, usePointStyle: true }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleFont: { size: 14, family: 'Inter' },
+                        bodyFont: { size: 13, family: 'Inter' },
+                        padding: 12,
+                        callbacks: {
+                            title: function(context) {
+                                return 'Year: ' + context[0].label;
+                            },
+                            label: function(context) {
+                                const yearIndex = context.dataIndex;
+                                const w = t6_wealth[yearIndex].toFixed(2);
+                                const p = context.parsed.y.toFixed(2);
+                                return [
+                                    `Pressure (P): ${p}`,
+                                    `Wealth Share (A): ${w}%`,
+                                    `Population (F): 20%`
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
